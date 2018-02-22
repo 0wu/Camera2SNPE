@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
@@ -321,11 +322,13 @@ public class Camera2BasicFragment extends Fragment
                 mSensorOrientation = characteristics.get(CameraCharacteristics.SENSOR_ORIENTATION);
                 Log.i("SensorOrientation", Integer.toString(mSensorOrientation));
 
-                mPreviewSize = new Size(1920, 1080);
+                mPreviewSize = new Size(1080, 1920);
 
                 //height - width are swapped due to sensor/display rotation.
-                mTextureView.setLayoutParams(new FrameLayout.LayoutParams(mPreviewSize.getHeight(), mPreviewSize.getWidth()));
-
+                mTextureView.setLayoutParams(new FrameLayout.LayoutParams(mPreviewSize.getWidth(), mPreviewSize.getHeight()));
+                Matrix transform = new Matrix();
+                transform.setScale(0.5f, 0.5f);
+                mTextureView.setTransform(transform);
 
                 mCameraId = cameraId;
 
@@ -417,9 +420,7 @@ public class Camera2BasicFragment extends Fragment
             assert texture != null;
 
             // We configure the size of default buffer to be the size of camera preview we want.
-
-
-            texture.setDefaultBufferSize(mPreviewSize.getWidth(), mPreviewSize.getHeight());
+            texture.setDefaultBufferSize(mPreviewSize.getHeight(), mPreviewSize.getWidth());
 
             // This is the output Surface we need to start preview.
             Surface surfaceTexture = new Surface(texture);
@@ -448,6 +449,7 @@ public class Camera2BasicFragment extends Fragment
                                 // Auto focus should be continuous for camera preview.
                                 mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE,
                                         CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
+                                mPreviewRequestBuilder.set(CaptureRequest.CONTROL_SCENE_MODE, CaptureRequest.CONTROL_SCENE_MODE_HDR);
                                 //mPreviewRequestBuilder.set(CaptureRequest.SENSOR_FRAME_DURATION, 1000000000L);
 
                                 // Finally, we start displaying the camera preview.

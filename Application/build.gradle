@@ -5,12 +5,15 @@ buildscript {
             url 'https://maven.google.com'
         }
         jcenter()
+
     }
 
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.1'
     }
 }
+
+
 
 apply plugin: 'com.android.application'
 
@@ -22,10 +25,11 @@ repositories {
 }
 
 dependencies {
-    compile "com.android.support:support-v4:27.0.0"
-    compile "com.android.support:support-v13:27.0.0"
-    compile "com.android.support:cardview-v7:27.0.0"
-    compile "com.android.support:appcompat-v7:27.0.0"
+    compile 'com.android.support:support-v4:27.0.0'
+    compile 'com.android.support:support-v13:27.0.0'
+    compile 'com.android.support:cardview-v7:27.0.0'
+    compile 'com.android.support:appcompat-v7:27.0.0'
+    implementation project(':snpe-release')
 }
 
 // The sample build uses multiple directories to
@@ -64,4 +68,11 @@ android {
 
     }
 
+    buildTypes {
+        debug {
+            packagingOptions {
+                doNotStrip "**/*/*.so"
+            }
+        }
+    }
 }
